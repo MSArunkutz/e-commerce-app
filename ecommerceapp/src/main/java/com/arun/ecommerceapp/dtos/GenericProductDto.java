@@ -1,14 +1,16 @@
-package com.arun.ecommerceapp.models;
+package com.arun.ecommerceapp.dtos;
 
+import com.arun.ecommerceapp.models.Category;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Product extends BaseModel{
+public class GenericProductDto {
+    private Long id;
     private String title;
     private String description;
     private String image;
-    private Category category;
+    private String category;
     private double price;
 }
