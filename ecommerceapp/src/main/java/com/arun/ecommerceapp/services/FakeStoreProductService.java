@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class FakeStoreProductService implements ProductService{
     private String createProductRequestURL = "https://fakestoreapi.com/products";
     private String updateProductRequestURL = "https://fakestoreapi.com/products/{id}";
     private String deleteProductRequestURL = "https://fakestoreapi.com/products/{id}";
-
+    private String getAllProductsRequestURL = "https://fakestoreapi.com/products";
     private GenericProductDto responseConverter(FakeStoreProductDto fakeStoreProductDto){
         GenericProductDto product = new GenericProductDto();
         product.setImage(fakeStoreProductDto.getImage());
@@ -60,5 +61,17 @@ public class FakeStoreProductService implements ProductService{
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<GenericProductDto> entity = new HttpEntity<>(headers);
         return restTemplate.exchange(deleteProductRequestURL, HttpMethod.DELETE, entity, GenericProductDto.class,id).getBody();
+    }
+
+    @Override
+    public List<GenericProductDto> getAllProducts() {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductDto[]> response=
+                restTemplate.getForEntity(getAllProductsRequestURL,FakeStoreProductDto[].class);
+        List<GenericProductDto> ans = new ArrayList<>();
+        for(FakeStoreProductDto fakeStoreProductDto : Arrays.stream(response.getBody()).toList()){
+            ans.add(responseConverter(fakeStoreProductDto));
+        }
+        return ans;
     }
 }
