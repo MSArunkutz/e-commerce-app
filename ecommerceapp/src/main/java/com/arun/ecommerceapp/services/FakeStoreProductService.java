@@ -16,6 +16,7 @@ public class FakeStoreProductService implements ProductService{
     private String requestURL="https://fakestoreapi.com/products/{id}";
     private String createProductRequestURL = "https://fakestoreapi.com/products";
     private String updateProductRequestURL = "https://fakestoreapi.com/products/{id}";
+    private String deleteProductRequestURL = "https://fakestoreapi.com/products/{id}";
 
     private GenericProductDto responseConverter(FakeStoreProductDto fakeStoreProductDto){
         GenericProductDto product = new GenericProductDto();
@@ -50,12 +51,14 @@ public class FakeStoreProductService implements ProductService{
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<GenericProductDto> entity = new HttpEntity<>(genericProductDto, headers);
-
-        return restTemplate.exchange(
-                updateProductRequestURL, HttpMethod.PUT, entity, GenericProductDto.class,id).getBody();
+        return restTemplate.exchange(updateProductRequestURL, HttpMethod.PUT, entity, GenericProductDto.class,id).getBody();
     }
     @Override
     public GenericProductDto deleteProduct(Long id) {
-        return null;
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        HttpEntity<GenericProductDto> entity = new HttpEntity<>(headers);
+        return restTemplate.exchange(deleteProductRequestURL, HttpMethod.DELETE, entity, GenericProductDto.class,id).getBody();
     }
 }

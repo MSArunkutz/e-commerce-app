@@ -31,16 +31,12 @@ public class ProductController {
     public GenericProductDto createProduct(@RequestBody GenericProductDto product){
         return productService.createProduct(product);
     }
-
     @DeleteMapping("{id}")
-    public void deleteProduct(@PathVariable("id")String id){
-
+    public GenericProductDto deleteProduct(@PathVariable("id")Long id){
+        return productService.deleteProduct(id);
     }
     @PutMapping("{id}")
     public GenericProductDto updateProduct(@RequestBody GenericProductDto genericProductDto,@PathVariable("id")Long id){
         return productService.updateProduct(genericProductDto,id);
     }
-
-
-
 }
