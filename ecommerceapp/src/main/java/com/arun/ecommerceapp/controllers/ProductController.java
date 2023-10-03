@@ -1,14 +1,10 @@
 package com.arun.ecommerceapp.controllers;
 
-import com.arun.ecommerceapp.dtos.ExceptionDto;
 import com.arun.ecommerceapp.dtos.GenericProductDto;
 import com.arun.ecommerceapp.exceptions.NotFoundException;
-import com.arun.ecommerceapp.models.Product;
 import com.arun.ecommerceapp.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
