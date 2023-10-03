@@ -2,6 +2,7 @@ package com.arun.ecommerceapp.services;
 
 import com.arun.ecommerceapp.dtos.FakeStoreProductDto;
 import com.arun.ecommerceapp.dtos.GenericProductDto;
+import com.arun.ecommerceapp.exceptions.NotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,13 @@ public class FakeStoreProductService implements ProductService{
         this.restTemplateBuilder = restTemplateBuilder;
     }
     @Override
-    public GenericProductDto getProductById(Long id) {
+    public GenericProductDto getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(requestURL, FakeStoreProductDto.class,id);
         FakeStoreProductDto fakeStoreProductDto = response.getBody();
+        if(fakeStoreProductDto == null){
+            throw new NotFoundException("Product with id : "+id+" doesn't exist");
+        }
         return responseConverter(fakeStoreProductDto);
     }
 

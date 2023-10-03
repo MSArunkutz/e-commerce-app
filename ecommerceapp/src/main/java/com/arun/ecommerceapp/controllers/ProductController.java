@@ -1,6 +1,8 @@
 package com.arun.ecommerceapp.controllers;
 
+import com.arun.ecommerceapp.dtos.ExceptionDto;
 import com.arun.ecommerceapp.dtos.GenericProductDto;
+import com.arun.ecommerceapp.exceptions.NotFoundException;
 import com.arun.ecommerceapp.models.Product;
 import com.arun.ecommerceapp.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,9 +31,19 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public GenericProductDto getProductById(@PathVariable("id") Long id){
+    public GenericProductDto getProductById(@PathVariable("id") Long id) throws NotFoundException {
         return productService.getProductById(id);
     }
+
+//    EXCEPTION HANDLER FROM WITHIN THE CONTROLLER
+//    @ExceptionHandler(NotFoundException.class)
+//    private ResponseEntity<ExceptionDto> NotFoundExceptionHandler(NotFoundException notFoundException){
+//        return new ResponseEntity<ExceptionDto>(
+//                new ExceptionDto(HttpStatus.NOT_FOUND,notFoundException.getMessage()),
+//                HttpStatus.NOT_FOUND
+//        );
+//    }
+
     @PostMapping
     public GenericProductDto createProduct(@RequestBody GenericProductDto product){
         return productService.createProduct(product);
