@@ -5,6 +5,9 @@ import com.arun.ecommerceapp.models.Product;
 import com.arun.ecommerceapp.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +37,10 @@ public class ProductController {
         return productService.createProduct(product);
     }
     @DeleteMapping("{id}")
-    public GenericProductDto deleteProduct(@PathVariable("id")Long id){
-        return productService.deleteProduct(id);
+    public ResponseEntity<GenericProductDto> deleteProduct(@PathVariable("id")Long id){
+        return new ResponseEntity<GenericProductDto>(
+                productService.deleteProduct(id), HttpStatus.ACCEPTED
+        );
     }
     @PutMapping("{id}")
     public GenericProductDto updateProduct(@RequestBody GenericProductDto genericProductDto,@PathVariable("id")Long id){
