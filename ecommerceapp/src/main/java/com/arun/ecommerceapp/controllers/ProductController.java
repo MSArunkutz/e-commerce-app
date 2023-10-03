@@ -27,19 +27,20 @@ public class ProductController {
     public GenericProductDto getProductById(@PathVariable("id") Long id){
         return productService.getProductById(id);
     }
-
-    @DeleteMapping("{id}")
-    public void deleteProductById(@PathVariable("id")String id){
-
-    }
-
     @PostMapping
     public GenericProductDto createProduct(@RequestBody GenericProductDto product){
         return productService.createProduct(product);
     }
 
-    @PutMapping("{id}")
-    public void updateProductById(@PathVariable("id")String id){
+    @DeleteMapping("{id}")
+    public void deleteProduct(@PathVariable("id")String id){
 
     }
+    @PutMapping("{id}")
+    public GenericProductDto updateProduct(@RequestBody GenericProductDto genericProductDto,@PathVariable("id")Long id){
+        return productService.updateProduct(genericProductDto,id);
+    }
+
+
+
 }

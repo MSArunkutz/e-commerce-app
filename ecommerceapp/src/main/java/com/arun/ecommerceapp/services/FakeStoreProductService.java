@@ -2,17 +2,20 @@ package com.arun.ecommerceapp.services;
 
 import com.arun.ecommerceapp.dtos.FakeStoreProductDto;
 import com.arun.ecommerceapp.dtos.GenericProductDto;
-import com.arun.ecommerceapp.models.Product;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
     private RestTemplateBuilder restTemplateBuilder;
     private String requestURL="https://fakestoreapi.com/products/{id}";
     private String createProductRequestURL = "https://fakestoreapi.com/products";
+    private String updateProductRequestURL = "https://fakestoreapi.com/products/{id}";
 
     private GenericProductDto responseConverter(FakeStoreProductDto fakeStoreProductDto){
         GenericProductDto product = new GenericProductDto();
@@ -40,5 +43,19 @@ public class FakeStoreProductService implements ProductService{
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<GenericProductDto> response = restTemplate.postForEntity(createProductRequestURL,genericProductDto,GenericProductDto.class);
         return response.getBody();
+    }
+    @Override
+    public GenericProductDto updateProduct(GenericProductDto genericProductDto, Long id) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        HttpEntity<GenericProductDto> entity = new HttpEntity<>(genericProductDto, headers);
+
+        return restTemplate.exchange(
+                updateProductRequestURL, HttpMethod.PUT, entity, GenericProductDto.class,id).getBody();
+    }
+    @Override
+    public GenericProductDto deleteProduct(Long id) {
+        return null;
     }
 }
