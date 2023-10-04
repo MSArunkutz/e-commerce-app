@@ -1,4 +1,4 @@
-package com.arun.ecommerceapp.dtos;
+package com.arun.ecommerceapp.thirdpartyclients.productservice.fakestore;
 
 import lombok.Getter;
 import lombok.Setter;
