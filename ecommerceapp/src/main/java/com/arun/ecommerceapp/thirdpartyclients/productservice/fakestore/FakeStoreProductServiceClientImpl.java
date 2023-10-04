@@ -13,35 +13,42 @@ import java.util.Arrays;
 import java.util.List;
 
 /*
-* This is the wrapper class for all the implementations related to fake store apis
-* */
+ * This is the wrapper class for all the implementations related to fake store apis
+ * */
 
 @Service
 public class FakeStoreProductServiceClientImpl {
     private RestTemplateBuilder restTemplateBuilder;
-    @Value("${fakestore.api.url}")
     private String fakeStoreApiUrl;
-    @Value("${fakestore.api.path.product}")
     private String productUrl;
+    private String baseUrl;
+    private String getProductByIdRequestURL;
+    private String createProductRequestURL;
+    private String updateProductRequestURL;
+    private String deleteProductRequestURL;
+    private String getAllProductsRequestURL;
 
-    private String baseUrl = fakeStoreApiUrl+productUrl;
-    private String getProductByIdRequestURL= baseUrl+"{id}";
-    private String createProductRequestURL = baseUrl;
-    private String updateProductRequestURL = baseUrl+"/{id}";
-    private String deleteProductRequestURL = baseUrl+"/{id}";
-    private String getAllProductsRequestURL = baseUrl;
 
-
-    public FakeStoreProductServiceClientImpl(RestTemplateBuilder restTemplateBuilder){
+    public FakeStoreProductServiceClientImpl(RestTemplateBuilder restTemplateBuilder,
+                                             @Value("${fakestore.api.url}") String fakeStoreApiUrl,
+                                             @Value("${fakestore.api.path.product}") String productUrl) {
         this.restTemplateBuilder = restTemplateBuilder;
+        this.fakeStoreApiUrl = fakeStoreApiUrl;
+        this.productUrl = productUrl;
+        this.baseUrl = this.fakeStoreApiUrl + this.productUrl;
+        this.getProductByIdRequestURL = baseUrl + "/{id}";
+        this.createProductRequestURL = baseUrl;
+        this.updateProductRequestURL = baseUrl + "/{id}";
+        this.deleteProductRequestURL = baseUrl + "/{id}";
+        this.getAllProductsRequestURL = baseUrl;
     }
 
     public FakeStoreProductDto getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(getProductByIdRequestURL, FakeStoreProductDto.class,id);
+        ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(getProductByIdRequestURL, FakeStoreProductDto.class, id);
         FakeStoreProductDto fakeStoreProductDto = response.getBody();
-        if(fakeStoreProductDto == null){
-            throw new NotFoundException("Product with id : "+id+" doesn't exist");
+        if (fakeStoreProductDto == null) {
+            throw new NotFoundException("Product with id : " + id + " doesn't exist");
         }
         return fakeStoreProductDto;
     }
@@ -49,7 +56,7 @@ public class FakeStoreProductServiceClientImpl {
 
     public FakeStoreProductDto createProduct(GenericProductDto genericProductDto) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> response = restTemplate.postForEntity(createProductRequestURL,genericProductDto,FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> response = restTemplate.postForEntity(createProductRequestURL, genericProductDto, FakeStoreProductDto.class);
         return response.getBody();
     }
 
@@ -58,7 +65,7 @@ public class FakeStoreProductServiceClientImpl {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<GenericProductDto> entity = new HttpEntity<>(genericProductDto, headers);
-        return restTemplate.exchange(updateProductRequestURL, HttpMethod.PUT, entity, FakeStoreProductDto.class,id).getBody();
+        return restTemplate.exchange(updateProductRequestURL, HttpMethod.PUT, entity, FakeStoreProductDto.class, id).getBody();
     }
 
     public FakeStoreProductDto deleteProduct(Long id) {
@@ -66,14 +73,14 @@ public class FakeStoreProductServiceClientImpl {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<GenericProductDto> entity = new HttpEntity<>(headers);
-        return restTemplate.exchange(deleteProductRequestURL, HttpMethod.DELETE, entity, FakeStoreProductDto.class,id).getBody();
+        return restTemplate.exchange(deleteProductRequestURL, HttpMethod.DELETE, entity, FakeStoreProductDto.class, id).getBody();
     }
 
 
     public List<FakeStoreProductDto> getAllProducts() {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto[]> response=
-                restTemplate.getForEntity(getAllProductsRequestURL,FakeStoreProductDto[].class);
+        ResponseEntity<FakeStoreProductDto[]> response =
+                restTemplate.getForEntity(getAllProductsRequestURL, FakeStoreProductDto[].class);
         List<FakeStoreProductDto> ans = new ArrayList<>(Arrays.stream(response.getBody()).toList());
         return ans;
     }
