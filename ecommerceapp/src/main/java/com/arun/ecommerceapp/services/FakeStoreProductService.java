@@ -4,11 +4,12 @@ import com.arun.ecommerceapp.dtos.GenericProductDto;
 import com.arun.ecommerceapp.exceptions.NotFoundException;
 import com.arun.ecommerceapp.thirdpartyclients.productservice.fakestore.FakeStoreProductDto;
 import com.arun.ecommerceapp.thirdpartyclients.productservice.fakestore.FakeStoreProductServiceClientImpl;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Primary
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
     private FakeStoreProductServiceClientImpl fakeStoreProductServiceClientImpl;

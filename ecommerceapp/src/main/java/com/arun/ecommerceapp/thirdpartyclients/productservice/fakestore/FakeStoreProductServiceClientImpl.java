@@ -2,6 +2,7 @@ package com.arun.ecommerceapp.thirdpartyclients.productservice.fakestore;
 
 import com.arun.ecommerceapp.dtos.GenericProductDto;
 import com.arun.ecommerceapp.exceptions.NotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,17 @@ import java.util.List;
 @Service
 public class FakeStoreProductServiceClientImpl {
     private RestTemplateBuilder restTemplateBuilder;
-    private String requestURL="https://fakestoreapi.com/products/{id}";
-    private String createProductRequestURL = "https://fakestoreapi.com/products";
-    private String updateProductRequestURL = "https://fakestoreapi.com/products/{id}";
-    private String deleteProductRequestURL = "https://fakestoreapi.com/products/{id}";
-    private String getAllProductsRequestURL = "https://fakestoreapi.com/products";
+    @Value("${fakestore.api.url}")
+    private String fakeStoreApiUrl;
+    @Value("${fakestore.api.path.product}")
+    private String productUrl;
+
+    private String baseUrl = fakeStoreApiUrl+productUrl;
+    private String getProductByIdRequestURL= baseUrl+"{id}";
+    private String createProductRequestURL = baseUrl;
+    private String updateProductRequestURL = baseUrl+"/{id}";
+    private String deleteProductRequestURL = baseUrl+"/{id}";
+    private String getAllProductsRequestURL = baseUrl;
 
 
     public FakeStoreProductServiceClientImpl(RestTemplateBuilder restTemplateBuilder){
@@ -31,7 +38,7 @@ public class FakeStoreProductServiceClientImpl {
 
     public FakeStoreProductDto getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(requestURL, FakeStoreProductDto.class,id);
+        ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(getProductByIdRequestURL, FakeStoreProductDto.class,id);
         FakeStoreProductDto fakeStoreProductDto = response.getBody();
         if(fakeStoreProductDto == null){
             throw new NotFoundException("Product with id : "+id+" doesn't exist");
