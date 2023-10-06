@@ -1,14 +1,18 @@
 package com.arun.ecommerceapp.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import lombok.*;
 
-@Getter
-@Setter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product extends BaseModel{
     private String title;
     private String description;
     private String image;
+    @ManyToOne
     private Category category;
     private double price;
 }
