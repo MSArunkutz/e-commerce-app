@@ -1,6 +1,7 @@
 package com.arun.ecommerceapp.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
@@ -15,4 +16,5 @@ public class Product extends BaseModel{
     @ManyToOne
     private Category category;
     private double price;
+
 }
